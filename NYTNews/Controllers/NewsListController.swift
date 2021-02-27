@@ -43,23 +43,27 @@ extension NewsListController: UITableViewDelegate,UITableViewDataSource {
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: NewsListCell.reuseIdentifier, for: indexPath) as! NewsListCell
-        let mainTitle = results[indexPath.row].title
-        let clearDate = results[indexPath.row].pubDate
-        let range = clearDate.index(clearDate.startIndex, offsetBy: 0)..<clearDate.index(clearDate.endIndex, offsetBy: -15)
-        let publishDate = clearDate[range]
-        let section = results[indexPath.row].section
-        let coverUrlString = self.results[indexPath.row].multimedia[0].url
-        DispatchQueue.global(qos: .background).async {
-            if let coverUrl = URL(string: coverUrlString){
-                    DispatchQueue.main.async {
-                        cell.cover.kf.setImage(with: coverUrl)
+        return cell
+
+    }
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        guard let cell = cell as? NewsListCell else { return }
+                let mainTitle = results[indexPath.row].title
+                let clearDate = results[indexPath.row].pubDate
+                let range = clearDate.index(clearDate.startIndex, offsetBy: 0)..<clearDate.index(clearDate.endIndex, offsetBy: -15)
+                let publishDate = clearDate[range]
+                let section = results[indexPath.row].section
+                let coverUrlString = self.results[indexPath.row].multimedia[0].url
+                DispatchQueue.global(qos: .background).async {
+                    if let coverUrl = URL(string: coverUrlString){
+                            DispatchQueue.main.async {
+                                cell.cover.kf.setImage(with: coverUrl)
+                                cell.mainTitle.text = mainTitle
+                                cell.publishDate.text = String(publishDate)
+                                cell.section.text = section
+                            }
                     }
             }
-    }
-        cell.mainTitle.text = mainTitle
-        cell.publishDate.text = String(publishDate)
-        cell.section.text = section
-        return cell
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
@@ -85,7 +89,7 @@ extension NewsListController: NetworkServiceDelegate {
                 self.results = items.results
                 self.tableView.reloadData()
             }
-        }   
+}
     func didFailWithError(error: Error) {
         DispatchQueue.main.async {
             let alertController = UIAlertController(title: "Alert", message: error.localizedDescription, preferredStyle: .alert)
