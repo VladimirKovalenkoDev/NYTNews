@@ -11,7 +11,6 @@ class NewsListController: UIViewController{
     private var networkService = NetworkService()
     private let tableView = UITableView()
     private var results = [News]()
-    private let refreshControl = UIRefreshControl()
     override func viewDidLoad() {
         super.viewDidLoad()
         networkService.delegate = self
