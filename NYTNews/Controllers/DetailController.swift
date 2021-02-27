@@ -6,15 +6,41 @@
 //
 
 import UIKit
-import SnapKit
+import WebKit
 class DetailController: UIViewController {
-var titlee = ""
+    var url = ""
+    private var webView: WKWebView = {
+        let webConfiguration = WKWebViewConfiguration()
+        let webView = WKWebView(frame: .zero, configuration: webConfiguration)
+        webView.translatesAutoresizingMaskIntoConstraints = false
+        return webView
+    }()
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        print(titlee)
+        webView.uiDelegate = self
+        loadWeb()
+        setUpWeb()
     }
-    
-
-
+    private func setUpWeb(){
+        self.view.backgroundColor = .white
+        self.view.addSubview(webView)
+                NSLayoutConstraint.activate([
+                    webView.topAnchor
+                        .constraint(equalTo: self.view.topAnchor, constant: 88),
+                    webView.leftAnchor
+                        .constraint(equalTo: self.view.safeAreaLayoutGuide.leftAnchor),
+                    webView.bottomAnchor
+                        .constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor),
+                    webView.rightAnchor
+                        .constraint(equalTo: self.view.safeAreaLayoutGuide.rightAnchor)
+                ])
+    }
+    private func loadWeb(){
+        if let myURL = URL(string: url){
+            let myRequest = URLRequest(url: myURL)
+            webView.load(myRequest)
+        }
+    }
 }
+extension DetailController: WKUIDelegate {}
