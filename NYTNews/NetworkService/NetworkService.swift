@@ -14,7 +14,7 @@ struct NetworkService {
     private let url = "https://api.nytimes.com/svc/topstories/v2/home.json?api-key="
     private let api = "vGSpbl3YoujqnGKPnYn3d4QFb3PID4VA"
     public var delegate : NetworkServiceDelegate?
-     public func performRequest(){
+    public func performRequest(){
             // create url
             let urlString = "\(url)\(api)"
             if let url = URL(string: urlString) {// it is optional cos it can be an error

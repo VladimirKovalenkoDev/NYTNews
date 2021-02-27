@@ -11,6 +11,7 @@ class NewsListController: UIViewController{
     private var networkService = NetworkService()
     private let tableView = UITableView()
     private var results = [News]()
+    private let refreshControl = UIRefreshControl()
     override func viewDidLoad() {
         super.viewDidLoad()
         networkService.delegate = self
@@ -18,7 +19,6 @@ class NewsListController: UIViewController{
         view.backgroundColor = .white
         setUpView()
         navigationItem.title = "News"
-        tableView.reloadData()
     }
     private func setUpView(){
         tableView.delegate = self
@@ -42,7 +42,9 @@ extension NewsListController: UITableViewDelegate,UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: NewsListCell.reuseIdentifier, for: indexPath) as! NewsListCell
         let mainTitle = results[indexPath.row].title
-        let publishDate = results[indexPath.row].pubDate
+        let clearDate = results[indexPath.row].pubDate
+        let range = clearDate.index(clearDate.startIndex, offsetBy: 0)..<clearDate.index(clearDate.endIndex, offsetBy: -15)
+        let publishDate = clearDate[range]
         let section = results[indexPath.row].section
         let coverUrlString = self.results[indexPath.row].multimedia[0].url
         DispatchQueue.global(qos: .background).async {
@@ -53,7 +55,7 @@ extension NewsListController: UITableViewDelegate,UITableViewDataSource {
             }
     }
         cell.mainTitle.text = mainTitle
-        cell.publishDate.text = publishDate
+        cell.publishDate.text = String(publishDate)
         cell.section.text = section
         return cell
     }
@@ -74,8 +76,6 @@ extension NewsListController: UITableViewDelegate,UITableViewDataSource {
             navigationItem.leftBarButtonItem?.isEnabled = false
         }
     }
-    
-    
 }
 extension NewsListController: NetworkServiceDelegate{
     func didSearch(_ networkService: NetworkService, items: NewsData) {

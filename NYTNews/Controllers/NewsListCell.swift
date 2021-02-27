@@ -68,7 +68,7 @@ static let reuseIdentifier = "NewsListCell"
         }
         publishDate.snp.makeConstraints { (make) in
             make.top.equalToSuperview().offset(78)
-            make.right.equalToSuperview()
+            make.right.equalToSuperview().offset(-5)
         }
     }
 }
