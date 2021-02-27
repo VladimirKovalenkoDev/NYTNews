@@ -10,7 +10,7 @@ import Kingfisher
 class NewsListController: UIViewController{
     private var networkService = NetworkService()
     private let tableView = UITableView()
-    var results = [News]()
+    private var results = [News]()
     override func viewDidLoad() {
         super.viewDidLoad()
         networkService.delegate = self
@@ -18,7 +18,7 @@ class NewsListController: UIViewController{
         view.backgroundColor = .white
         setUpView()
         navigationItem.title = "News"
-       // tableView.reloadData()
+        tableView.reloadData()
     }
     private func setUpView(){
         tableView.delegate = self
@@ -77,10 +77,10 @@ extension NewsListController: UITableViewDelegate,UITableViewDataSource {
     
     
 }
-extension NewsListController: SearchManagerDelegate{
-    func didSearch(_ searchManager: NetworkService, searchItems: NewsData) {
+extension NewsListController: NetworkServiceDelegate{
+    func didSearch(_ networkService: NetworkService, items: NewsData) {
             DispatchQueue.main.async {
-                self.results = searchItems.results
+                self.results = items.results
                 self.tableView.reloadData()
             }
         }   

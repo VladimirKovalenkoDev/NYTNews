@@ -6,16 +6,15 @@
 //
 
 import Foundation
-protocol SearchManagerDelegate {
-    func didSearch(_ searchManager : NetworkService, searchItems: NewsData)
+protocol NetworkServiceDelegate {
+    func didSearch(_ networkService : NetworkService, items: NewsData)
     func didFailWithError (error: Error )
 }
 struct NetworkService {
     private let url = "https://api.nytimes.com/svc/topstories/v2/home.json?api-key="
     private let api = "vGSpbl3YoujqnGKPnYn3d4QFb3PID4VA"
-        var delegate : SearchManagerDelegate?
-        
-        func performRequest(){
+    public var delegate : NetworkServiceDelegate?
+     public func performRequest(){
             // create url
             let urlString = "\(url)\(api)"
             if let url = URL(string: urlString) {// it is optional cos it can be an error
@@ -28,8 +27,8 @@ struct NetworkService {
                              return
                          }
                          if let safeData = data {
-                            if  let searchItems = self.parseJSON(safeData){
-                               self.delegate?.didSearch(self , searchItems: searchItems)
+                            if  let items = self.parseJSON(safeData){
+                               self.delegate?.didSearch(self , items: items)
                             }
                          }
                      }
@@ -38,7 +37,7 @@ struct NetworkService {
                 }
 
             }
-        func parseJSON(_ searchData: Data) -> NewsData? {
+   private  func parseJSON(_ searchData: Data) -> NewsData? {
             let decoder = JSONDecoder()// create decoder
             do {
                 //decoding
@@ -47,7 +46,7 @@ struct NetworkService {
                 let searchItems  = NewsData(results: results)
                 return searchItems
             }catch{
-               delegate?.didFailWithError(error: error  )
+               delegate?.didFailWithError(error: error)
                 return nil
                 }
             }
