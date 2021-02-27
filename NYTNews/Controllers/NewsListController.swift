@@ -9,7 +9,16 @@ import SnapKit
 import Kingfisher
 class NewsListController: UIViewController{
     private var networkService = NetworkService()
-    private let tableView = UITableView()
+    private lazy var tableView: UITableView = {
+        let tableView = UITableView(frame: .zero)
+        tableView.dataSource = self
+        tableView.delegate = self
+        tableView.separatorStyle = .singleLine
+        tableView.separatorColor = .none
+        tableView.rowHeight = 100
+        tableView.register(NewsListCell.self, forCellReuseIdentifier: NewsListCell.reuseIdentifier)
+        return tableView
+    }()
     private var results = [News]()
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,12 +29,6 @@ class NewsListController: UIViewController{
         navigationItem.title = "News"
     }
     private func setUpView(){
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.separatorStyle = .singleLine
-        tableView.separatorColor = .none
-        tableView.rowHeight = 100
-        tableView.register(NewsListCell.self, forCellReuseIdentifier: NewsListCell.reuseIdentifier)
         view.addSubview(tableView)
         tableView.snp.makeConstraints { (make) in
             make.top.equalToSuperview().offset(88)
@@ -62,7 +65,7 @@ extension NewsListController: UITableViewDelegate,UITableViewDataSource {
         tableView.deselectRow(at: indexPath, animated: true)
         if !tableView.isEditing {
             let vc = DetailController()
-            vc.url = results[indexPath.row].shortUrl
+            vc.url = results[indexPath.row].url
             navigationController?.pushViewController(vc, animated: true)
         } else if tableView.indexPathsForSelectedRows != nil {
             navigationItem.leftBarButtonItem?.isEnabled = true
@@ -76,7 +79,7 @@ extension NewsListController: UITableViewDelegate,UITableViewDataSource {
         }
     }
 }
-extension NewsListController: NetworkServiceDelegate{
+extension NewsListController: NetworkServiceDelegate {
     func didSearch(_ networkService: NetworkService, items: NewsData) {
             DispatchQueue.main.async {
                 self.results = items.results

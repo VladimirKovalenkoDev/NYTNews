@@ -9,7 +9,7 @@ import UIKit
 import WebKit
 class DetailController: UIViewController {
     var url = ""
-    private var webView: WKWebView = {
+    private lazy var webView: WKWebView = {
         let webConfiguration = WKWebViewConfiguration()
         let webView = WKWebView(frame: .zero, configuration: webConfiguration)
         webView.translatesAutoresizingMaskIntoConstraints = false

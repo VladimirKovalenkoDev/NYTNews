@@ -11,13 +11,13 @@ struct NewsData: Codable {
 }
 struct News: Codable {
     enum CodingKeys:  String, CodingKey{
-        case shortUrl = "short_url"
+        case url
         case title
         case section
         case pubDate = "published_date"
         case multimedia
     }
-    let shortUrl: String
+    let url: String
     let title: String
     let section: String
     let pubDate: String

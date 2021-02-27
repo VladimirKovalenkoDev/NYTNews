@@ -9,7 +9,7 @@ import UIKit
 import SnapKit
 class NewsListCell: UITableViewCell {
 static let reuseIdentifier = "NewsListCell"
-    public var mainTitle: UILabel = {
+    public lazy var mainTitle: UILabel = {
         let label = UILabel()
         label.text = "Main title"
         label.lineBreakMode = .byWordWrapping
@@ -17,7 +17,7 @@ static let reuseIdentifier = "NewsListCell"
         label.textAlignment = .left
         return label
     }()
-    public var publishDate: UILabel = {
+    public lazy var publishDate: UILabel = {
         let label = UILabel()
         label.text = "publish date"
         label.textAlignment = .center
@@ -25,7 +25,7 @@ static let reuseIdentifier = "NewsListCell"
         label.font = UIFont.systemFont(ofSize: 12)
         return label
     }()
-    public var section: UILabel = {
+    public lazy var section: UILabel = {
         let label = UILabel()
         label.text = "section"
         label.textAlignment = .center
@@ -33,7 +33,7 @@ static let reuseIdentifier = "NewsListCell"
         label.font = UIFont.systemFont(ofSize: 12)
         return label
     }()
-    public var cover: UIImageView = {
+    public lazy var cover: UIImageView = {
         let imageView = UIImageView()
         imageView.backgroundColor = .lightGray
         imageView.contentMode = .scaleToFill
